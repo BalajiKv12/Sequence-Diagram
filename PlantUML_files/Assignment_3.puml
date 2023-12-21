@@ -1,0 +1,48 @@
+@startuml Assignment-3
+actor User #RoyalBlue
+
+User -> BankInterface : Request Account Opening 
+activate User
+activate BankInterface
+BankInterface --> User : Displays Account types(Current/Savings/Demat)
+User -> BankInterface : Enters option
+database Database #MediumSeaGreen
+BankInterface -> Database : Validates User option
+activate Database
+alt option 1/ option 2/ option 3
+    Database --> User : Creates Savings/Current/Demat Account with zero balance
+else else
+    Database --> User : Invalid Option try again (null account is created)
+end
+loop until true
+    BankInterface --> User : Displays options for deposit/withdraw/FD/check balance   
+    User -> BankInterface : Enters option
+    BankInterface -> Database : Validates User option
+    alt option 1/ option 2
+        Database --> BankInterface : Deposit/withdraw 
+        BankInterface --> User : Asks User to Deposit/withdraw Money
+        User --> BankInterface : Deposits/withdraw money
+        BankInterface -> Database : Validates and Updates money in the account
+        BankInterface --> User : Displays options for deposit/withdraw/FD/check balance
+    else option 3
+        Database --> BankInterface : FD(fixed deposit) 
+        BankInterface --> User : Asks User to Deposit Money
+        User --> BankInterface : Deposits money
+        BankInterface -> Database : Validates and Updates money in the account
+        BankInterface --> User : Asks timeperiod to deposit
+        User -> BankInterface : Enters timeperiod
+        BankInterface -> Database : Calculates interest and updates in database
+        BankInterface -> User : Displays interest for the timeperiod and remaining bank balance
+        BankInterface --> User : Displays options for deposit/withdraw/FD/check balance
+    else option 4
+        Database --> BankInterface :bank balance
+        deactivate Database
+        BankInterface --> User : Displays bank balance
+        BankInterface --> User : Displays options for deposit/withdraw/FD/check balance
+    else else
+        BankInterface --> User: Invalid Option 
+        deactivate BankInterface
+        deactivate User
+    end           
+end loop
+@enduml

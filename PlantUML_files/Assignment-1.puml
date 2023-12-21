@@ -1,0 +1,33 @@
+@startuml Assignment-1
+actor Customer #GreenYellow
+loop until Option>0 and Option<4
+
+    Customer -> HotelMenu : Request Menu
+    activate Customer
+    activate HotelMenu
+    database Database #OrangeRed
+    HotelMenu -> Database : Search menu 
+    activate Database
+    Database --> Customer : Show menu
+    Customer -> HotelMenu : Enter Option
+    HotelMenu -> Database : Checks Option
+    alt Option 0
+        Database --> Customer : Displays exit message
+    end
+    alt Option 1 or Option 2 or Option 3
+        Database --> Customer : Displays Veg/Non-Veg/Beverages menu
+        Customer -> HotelMenu : Enter Option 
+        HotelMenu -> Database : Checks Option
+        alt Option 1 or Option 2 or Option 3
+            Database --> Customer : Confirms the dish and order is placed
+        else other options
+            Database --> Customer : Invalid Option
+        end
+    else other options
+        Database -> Customer : Invalid Option 
+        deactivate Customer
+        deactivate HotelMenu
+        deactivate Database
+    end
+end loop 
+@enduml
